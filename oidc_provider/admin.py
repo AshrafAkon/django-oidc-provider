@@ -4,7 +4,7 @@ from uuid import uuid4
 
 from django.forms import ModelForm
 from django.contrib import admin
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from oidc_provider.models import Client, Code, Token, RSAKey
 
@@ -66,7 +66,8 @@ class ClientAdmin(admin.ModelAdmin):
         }],
     ]
     form = ClientForm
-    list_display = ['name', 'client_id', 'response_type_descriptions', 'date_created']
+    list_display = ['name', 'client_id',
+                    'response_type_descriptions', 'date_created']
     readonly_fields = ['date_created']
     search_fields = ['name']
     raw_id_fields = ['owner']

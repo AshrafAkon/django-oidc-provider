@@ -1,6 +1,6 @@
 import copy
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from oidc_provider import settings
 
@@ -40,7 +40,8 @@ class ScopeClaims(object):
     def __init__(self, token):
         self.user = token.user
         claims = copy.deepcopy(STANDARD_CLAIMS)
-        self.userinfo = settings.get('OIDC_USERINFO', import_str=True)(claims, self.user)
+        self.userinfo = settings.get(
+            'OIDC_USERINFO', import_str=True)(claims, self.user)
         self.scopes = token.scope
         self.client = token.client
 

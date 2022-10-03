@@ -6,7 +6,7 @@ import json
 
 from django.db import models
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 
 
@@ -56,7 +56,8 @@ class ResponseType(models.Model):
 
 class Client(models.Model):
 
-    name = models.CharField(max_length=100, default='', verbose_name=_(u'Name'))
+    name = models.CharField(max_length=100, default='',
+                            verbose_name=_(u'Name'))
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name=_(u'Owner'), blank=True,
         null=True, default=None, on_delete=models.SET_NULL, related_name='oidc_clients_set')
@@ -67,8 +68,10 @@ class Client(models.Model):
         verbose_name=_(u'Client Type'),
         help_text=_(u'<b>Confidential</b> clients are capable of maintaining the confidentiality'
                     u' of their credentials. <b>Public</b> clients are incapable.'))
-    client_id = models.CharField(max_length=255, unique=True, verbose_name=_(u'Client ID'))
-    client_secret = models.CharField(max_length=255, blank=True, verbose_name=_(u'Client SECRET'))
+    client_id = models.CharField(
+        max_length=255, unique=True, verbose_name=_(u'Client ID'))
+    client_secret = models.CharField(
+        max_length=255, blank=True, verbose_name=_(u'Client SECRET'))
     response_types = models.ManyToManyField(ResponseType)
     jwt_alg = models.CharField(
         max_length=10,
@@ -76,7 +79,8 @@ class Client(models.Model):
         default='RS256',
         verbose_name=_(u'JWT Algorithm'),
         help_text=_(u'Algorithm used to encode ID Tokens.'))
-    date_created = models.DateField(auto_now_add=True, verbose_name=_(u'Date Created'))
+    date_created = models.DateField(
+        auto_now_add=True, verbose_name=_(u'Date Created'))
     website_url = models.CharField(
         max_length=255, blank=True, default='', verbose_name=_(u'Website URL'))
     terms_url = models.CharField(
@@ -160,7 +164,8 @@ class Client(models.Model):
 
 class BaseCodeTokenModel(models.Model):
 
-    client = models.ForeignKey(Client, verbose_name=_(u'Client'), on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, verbose_name=_(
+        u'Client'), on_delete=models.CASCADE)
     expires_at = models.DateTimeField(verbose_name=_(u'Expiration Date'))
     _scope = models.TextField(default='', verbose_name=_(u'Scopes'))
 
@@ -186,10 +191,14 @@ class Code(BaseCodeTokenModel):
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name=_(u'User'), on_delete=models.CASCADE)
-    code = models.CharField(max_length=255, unique=True, verbose_name=_(u'Code'))
-    nonce = models.CharField(max_length=255, blank=True, default='', verbose_name=_(u'Nonce'))
-    is_authentication = models.BooleanField(default=False, verbose_name=_(u'Is Authentication?'))
-    code_challenge = models.CharField(max_length=255, null=True, verbose_name=_(u'Code Challenge'))
+    code = models.CharField(max_length=255, unique=True,
+                            verbose_name=_(u'Code'))
+    nonce = models.CharField(max_length=255, blank=True,
+                             default='', verbose_name=_(u'Nonce'))
+    is_authentication = models.BooleanField(
+        default=False, verbose_name=_(u'Is Authentication?'))
+    code_challenge = models.CharField(
+        max_length=255, null=True, verbose_name=_(u'Code Challenge'))
     code_challenge_method = models.CharField(
         max_length=255, null=True, verbose_name=_(u'Code Challenge Method'))
 
@@ -205,8 +214,10 @@ class Token(BaseCodeTokenModel):
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, verbose_name=_(u'User'), on_delete=models.CASCADE)
-    access_token = models.CharField(max_length=255, unique=True, verbose_name=_(u'Access Token'))
-    refresh_token = models.CharField(max_length=255, unique=True, verbose_name=_(u'Refresh Token'))
+    access_token = models.CharField(
+        max_length=255, unique=True, verbose_name=_(u'Access Token'))
+    refresh_token = models.CharField(
+        max_length=255, unique=True, verbose_name=_(u'Refresh Token'))
     _id_token = models.TextField(verbose_name=_(u'ID Token'))
 
     class Meta:
